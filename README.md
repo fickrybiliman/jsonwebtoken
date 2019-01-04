@@ -4,4 +4,4 @@
 
 * npm install jsonwebtoken
 * pembuatan token adalah saat user melakukan login yaitu di routes users
-*
+* import atau require jsonwebtoken **const jwt = require('jsonwebtoken')**

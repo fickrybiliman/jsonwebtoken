@@ -4,23 +4,10 @@ var router = express.Router();
 const models = require('../models');
 const bcrypt = require('bcrypt');
 
-//middlewares for check express-session
+const jwt = require('jsonwebtoken');
+
+//middlewares for check jsonwebtoken
 const { checkAuthSession } = require('../middlewares/auth');
-
-/* GET users listing. */
-router.get('/', checkAuthSession, function(req, res, next) {
-   models.User.findAll().then(users => {
-      // console.log(users);
-      res.render('auth/index', {user: users});
-   }).catch(err => {
-      console.log(err);
-      res.render('auth/index');
-   })
-});
-
-router.get('/login', (req, res, next) => {
-   res.render('auth/login');
-});
 
 router.post('/login', (req, res, next) => {
    const {username, password} = req.body;
@@ -33,15 +20,16 @@ router.post('/login', (req, res, next) => {
       if (user != null) {
          const checkPassword = bcrypt.compareSync(password, user.password);
          if (checkPassword === true) {
-         req.session.user = {
-            username: user.username
-         }
-         res.redirect('/konstituens');
+         // req.session.user = {
+         //    username: user.username
+         // }
+         const token = jwt.sign({user: user}, 'secret_key');
+         res.status(200).json({message: "Success Login", data: {token : token}});
          } else {
-         res.redirect('/users/login');
+         res.status(403).json({message: "Invalid Login"});
          }
       } else {
-         res.redirect('/users/login');
+         res.status(403).json({message: "Invalid Login"});
       }
    })
 });

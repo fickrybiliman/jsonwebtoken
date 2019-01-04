@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 const models = require('../models');
 
-//middlewares for check express-session
-// const { checkAuthSession } = require('../middlewares/auth');
+// middlewares for check jsonwbtoken
+const { checkAuth } = require('../middlewares/auth');
 
 // router.get('/', checkAuthSession, function(req, res, next) {
-router.get('/', function(req, res, next) {
+router.get('/', checkAuth, function(req, res, next) {
    models.Konstituen.findAll({include: [{model: models.Kecamatan}, {model: models.Kelurahan}]}).then(konstituens => {
       // console.log(konstituens)
       models.Kecamatan.findAll().then(kecamatans => {
@@ -42,27 +42,27 @@ router.get('/', function(req, res, next) {
 //    })
 // });
 
-router.get('/viewPerKelurahan/:id', (req, res, next) => {
-   const kelurahanId = req.params.id;
-   models.Konstituen.findAll({
-      include: [{model: models.Kecamatan}, 
-                {model: models.Kelurahan}],
-      where: {kelurahanID: kelurahanId}
-   }).then(konstituens => {
-      // console.log(konstituens)
-      models.Kelurahan.findAll().then(kelurahans => {
-         // console.log(kecamatans)
-         models.Kelurahan.findOne({where: {id: kelurahanId}}).then(namaKelurahan => {
-            models.Kecamatan.findAll().then(kecamatans => {
-               res.render('konstituen/viewPerKelurahan', {konstituen: konstituens, kelurahan: kelurahans, namaKelurahan: namaKelurahan, kecamatan: kecamatans});
-            })
-         })
-      })
-   }).catch(err => {
-      console.log(err);
-      res.render('konstituen/index');
-   })
-});
+// router.get('/viewPerKelurahan/:id', (req, res, next) => {
+//    const kelurahanId = req.params.id;
+//    models.Konstituen.findAll({
+//       include: [{model: models.Kecamatan}, 
+//                 {model: models.Kelurahan}],
+//       where: {kelurahanID: kelurahanId}
+//    }).then(konstituens => {
+//       // console.log(konstituens)
+//       models.Kelurahan.findAll().then(kelurahans => {
+//          // console.log(kecamatans)
+//          models.Kelurahan.findOne({where: {id: kelurahanId}}).then(namaKelurahan => {
+//             models.Kecamatan.findAll().then(kecamatans => {
+//                res.render('konstituen/viewPerKelurahan', {konstituen: konstituens, kelurahan: kelurahans, namaKelurahan: namaKelurahan, kecamatan: kecamatans});
+//             })
+//          })
+//       })
+//    }).catch(err => {
+//       console.log(err);
+//       res.render('konstituen/index');
+//    })
+// });
 
 // router.get('/add', checkAuthSession, (req, res, next) => {
 // router ini hanya untuk menampilkan form add, di disable saja
@@ -78,7 +78,7 @@ router.get('/viewPerKelurahan/:id', (req, res, next) => {
 //    })
 // });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
    const {nama, nik, hp, alamat, kecamatanID, kelurahanID, tps} = req.body;
    models.Konstituen.create({nama, nik, hp, alamat, kecamatanID, kelurahanID, tps}).then(konstituen => {
       res.status(201).json({message: "Konstituen Created", data: konstituen});
@@ -105,7 +105,7 @@ router.post('/', (req, res, next) => {
 //    })
 // });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', checkAuth, (req, res, next) => {
    const konstituenId = req.params.id;
    const {nama, nik, hp, alamat, kecamatanID, kelurahanID, tps} = req.body;
    models.Konstituen.findOne({where: {id: konstituenId}}).then(konstituen => {
@@ -126,7 +126,7 @@ router.put('/:id', (req, res, next) => {
    })
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', checkAuth, (req, res, next) => {
    const konstituenId = req.params.id;
    models.Konstituen.findOne({where: {id: konstituenId}}).then(konstituen => {
       return konstituen.destroy();

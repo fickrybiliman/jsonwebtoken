@@ -1,0 +1,52 @@
+'use strict';
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    /*
+      Add altering commands here.
+      Return a promise to correctly handle asynchronicity.
+
+      Example:
+      return queryInterface.bulkInsert('People', [{
+        name: 'John Doe',
+        isBetaMember: false
+      }], {});
+    */
+    return queryInterface.bulkInsert('Kecamatans', [{
+      kecamatan: 'Pontianak Kota',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      kecamatan: 'Pontianak Barat',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      kecamatan: 'Pontianak Selatan',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      kecamatan: 'Pontianak Tenggara',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      kecamatan: 'Pontianak Timur',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      kecamatan: 'Pontianak Utara',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }], {});
+  },
+
+  down: (queryInterface, Sequelize) => {
+    /*
+      Add reverting commands here.
+      Return a promise to correctly handle asynchronicity.
+
+      Example:
+      return queryInterface.bulkDelete('People', null, {});
+    */
+    return queryInterface.bulkDelete('Kecamatans', null, {});    
+  }
+};
